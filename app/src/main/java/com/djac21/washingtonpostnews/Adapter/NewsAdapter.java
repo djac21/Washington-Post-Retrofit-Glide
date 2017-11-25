@@ -22,7 +22,7 @@ import com.djac21.washingtonpostnews.CustomTabs.WebViewActivity;
 import com.djac21.washingtonpostnews.R;
 import com.djac21.washingtonpostnews.Model.NewsModel;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MovieViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<NewsModel> news;
     private int rowLayout;
@@ -35,13 +35,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MovieViewHolde
     }
 
     @Override
-    public NewsAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
-        return new MovieViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.title.setText(news.get(position).getTitle());
         holder.author.setText(news.get(position).getAuthor());
         holder.description.setText(news.get(position).getDescription());
@@ -57,15 +57,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MovieViewHolde
         return news.size();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         LinearLayout linearLayout;
-        TextView title;
-        TextView author;
-        TextView description;
-        TextView date;
+        TextView title, author, description, date;
         ImageView image;
 
-        public MovieViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             linearLayout = view.findViewById(R.id.layout);
             title = view.findViewById(R.id.title);
