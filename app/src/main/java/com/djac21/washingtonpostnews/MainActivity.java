@@ -1,7 +1,6 @@
 package com.djac21.washingtonpostnews;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -32,39 +33,39 @@ public class MainActivity extends AppCompatActivity {
     private final static String API_KEY = "212c1dceeac8453d99337f0062e998f3";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        progressBar = findViewById(R.id.progressBar);
 
         if (API_KEY.isEmpty()) {
             Toast.makeText(MainActivity.this, "No API key", Toast.LENGTH_LONG).show();
             return;
         }
 
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        new generateData().execute();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new generateData().execute();
+                new GetData().execute();
             }
         });
+
+        new GetData().execute();
     }
 
-    private class generateData extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
+    private class GetData extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-            swipeRefreshLayout.setRefreshing(true);
-            progressDialog = ProgressDialog.show(MainActivity.this, null, "Loading, Please Wait...");
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, t.toString());
                 }
             });
-
             return null;
         }
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             swipeRefreshLayout.setRefreshing(false);
-            progressDialog.dismiss();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("OK", null);
             builder.create().show();
         } else if (id == R.id.action_refresh) {
-            new generateData().execute();
+            new GetData().execute();
         }
         return super.onOptionsItemSelected(item);
     }
