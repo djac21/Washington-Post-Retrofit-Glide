@@ -17,11 +17,11 @@ import java.util.List;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.djac21.washingtonpostnews.API.APIInterface;
 import com.djac21.washingtonpostnews.Adapter.NewsAdapter;
 import com.djac21.washingtonpostnews.Model.NewsModel;
 import com.djac21.washingtonpostnews.Model.NewsResponse;
-import com.djac21.washingtonpostnews.API.ApiClient;
-import com.djac21.washingtonpostnews.API.ApiInterface;
+import com.djac21.washingtonpostnews.API.APIClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         if (API_KEY.isEmpty()) {
-            Toast.makeText(MainActivity.this, "No API key", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "No APIInterface key", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+            APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
 
-            Call<NewsResponse> call = apiService.getTopNews(API_KEY);
+            Call<NewsResponse> call = apiInterface.getTopNews(API_KEY);
             call.enqueue(new Callback<NewsResponse>() {
                 @Override
                 public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_about) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle("About")
-                    .setMessage("This app uses the Washington Post API to populate the data")
+                    .setMessage("This app uses the Washington Post APIInterface to populate the data")
                     .setPositiveButton("OK", null);
             builder.create().show();
         } else if (id == R.id.action_refresh) {

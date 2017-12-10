@@ -3,7 +3,7 @@ package com.djac21.washingtonpostnews.API;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiClient {
+public class APIClient {
     public static final String BASE_URL = "https://newsapi.org/v1/";
     private static Retrofit retrofit = null;
 
