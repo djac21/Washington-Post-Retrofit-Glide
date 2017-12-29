@@ -1,4 +1,4 @@
-package com.djac21.washingtonpostnews.Model;
+package com.djac21.washingtonpostnews.Models;
 
 import com.google.gson.annotations.SerializedName;
 

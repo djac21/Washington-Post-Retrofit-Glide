@@ -19,8 +19,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.djac21.washingtonpostnews.API.APIInterface;
 import com.djac21.washingtonpostnews.Adapter.NewsAdapter;
-import com.djac21.washingtonpostnews.Model.NewsModel;
-import com.djac21.washingtonpostnews.Model.NewsResponse;
+import com.djac21.washingtonpostnews.Models.NewsModel;
+import com.djac21.washingtonpostnews.Models.NewsResponse;
 import com.djac21.washingtonpostnews.API.APIClient;
 
 import retrofit2.Call;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         if (API_KEY.isEmpty()) {
-            Toast.makeText(MainActivity.this, "No APIInterface key", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "No API key", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
                     List<NewsModel> news = response.body().getResults();
-                    recyclerView.setAdapter(new NewsAdapter(news, R.layout.list_items, getApplicationContext()));
+                    recyclerView.setAdapter(new NewsAdapter(news, R.layout.card_view, getApplicationContext()));
                 }
 
                 @Override
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_about) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle("About")
-                    .setMessage("This app uses the Washington Post APIInterface to populate the data")
+                    .setMessage("This app uses the Washington Post API to populate the data")
                     .setPositiveButton("OK", null);
             builder.create().show();
         } else if (id == R.id.action_refresh) {

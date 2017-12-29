@@ -10,17 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.bumptech.glide.Glide;
 import com.djac21.washingtonpostnews.CustomTabs.CustomTabActivityHelper;
 import com.djac21.washingtonpostnews.CustomTabs.WebViewActivity;
 import com.djac21.washingtonpostnews.R;
-import com.djac21.washingtonpostnews.Model.NewsModel;
+import com.djac21.washingtonpostnews.Models.NewsModel;
+
+import org.ocpsoft.prettytime.PrettyTime;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
@@ -42,10 +48,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getDefault());
+        long time = 0;
+        try {
+            time = sdf.parse(news.get(position).getDate()).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
+
         holder.title.setText(news.get(position).getTitle());
         holder.author.setText(news.get(position).getAuthor());
         holder.description.setText(news.get(position).getDescription());
-        holder.date.setText(news.get(position).getDate());
+        holder.date.setText(prettyTime.format(new Date(time)));
         Glide.with(context)
                 .load(news.get(position).getImage())
                 .placeholder(R.drawable.ic_loading)
@@ -58,13 +75,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        LinearLayout linearLayout;
         TextView title, author, description, date;
         ImageView image;
 
         public ViewHolder(View view) {
             super(view);
-            linearLayout = view.findViewById(R.id.layout);
             title = view.findViewById(R.id.title);
             author = view.findViewById(R.id.author);
             description = view.findViewById(R.id.description);
