@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface APIInterface {
-    @GET("articles?source=the-washington-post&sortBy=top")
+    @GET("everything?sources=the-washington-post")
     Call<NewsResponse> getTopNews(@Query("apiKey") String apiKey);
 }

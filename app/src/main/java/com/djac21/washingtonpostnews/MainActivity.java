@@ -1,6 +1,7 @@
 package com.djac21.washingtonpostnews;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -76,13 +77,28 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<NewsResponse>() {
                 @Override
                 public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-                    List<NewsModel> news = response.body().getResults();
-                    recyclerView.setAdapter(new NewsAdapter(news, R.layout.card_view, getApplicationContext()));
+                    if (response.isSuccessful()) {
+                        List<NewsModel> news = response.body().getResults();
+                        recyclerView.setAdapter(new NewsAdapter(news, R.layout.card_view, getApplicationContext()));
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<NewsResponse> call, Throwable t) {
                     Log.e(TAG, t.toString());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Error!")
+                            .setCancelable(false)
+                            .setMessage("The was an error on displaying the data, please be sure that you have internet access")
+                            .setNegativeButton("Cancel", null)
+                            .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new GetData().execute();
+                                }
+                            });
+                    builder.create().show();
                 }
             });
             return null;
@@ -92,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             swipeRefreshLayout.setRefreshing(false);
-            progressBar.setVisibility(View.GONE);
         }
     }
 
