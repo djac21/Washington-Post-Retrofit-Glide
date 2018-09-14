@@ -50,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         long time = 0;
         try {
             time = simpleDateFormat.parse(news.get(position).getDate()).getTime();
